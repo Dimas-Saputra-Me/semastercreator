@@ -1,10 +1,5 @@
 {
+  "rewrites": [{ "source": "/", "destination": "/index.html" }],
   "cleanUrls": true,
-  "build": {
-    "src": "index.html",
-    "use": "@vercel/static-build",
-    "config": {
-      "distDir": "./"
-    }
-  }
+  "trailingSlash": false
 }
