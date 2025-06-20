@@ -1,9 +1,10 @@
 {
   "cleanUrls": true,
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/index.html"
+  "build": {
+    "src": "index.html",
+    "use": "@vercel/static-build",
+    "config": {
+      "distDir": "./"
     }
-  ]
+  }
 }
