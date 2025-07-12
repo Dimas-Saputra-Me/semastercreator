@@ -50,3 +50,12 @@ You can view the SeMasterCreator project in action:
 🌐 Homepage: https://semastercreator.vercel.app
 
 Explore our automated cosmic content across platforms by visiting our social media accounts linked on the homepage!
+
+## 🧠 Credits & Inspirations
+
+This project is **refactored and combined** from these amazing original creators:
+
+- 🤖 **[RoboNuggets](https://www.youtube.com/@RoboNuggets)** — Content AI Generation Workflows  
+- 🛰️ **[dainami_ai](https://www.youtube.com/@dainami_ai)** — Social Media Publishing Automation
+
+> 🚧 *SeMasterCreator* is a unified and extended version built upon their concepts — redesigned for multi-platform publishing, AI-enhanced generation, and full automation with improved modularity.
