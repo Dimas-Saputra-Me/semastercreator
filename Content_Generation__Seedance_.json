@@ -1,0 +1,1271 @@
+{
+  "name": "Content Generation [Seedance]",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "function findSceneEntries(obj) {\n  const scenes = [];\n\n  for (const [key, value] of Object.entries(obj)) {\n    if (key.toLowerCase().startsWith(\"scene\") && typeof value === \"string\") {\n      scenes.push(value);\n    } else if (typeof value === \"object\" && value !== null) {\n      scenes.push(...findSceneEntries(value));\n    }\n  }\n\n  return scenes;\n}\n\nlet output = [];\n\ntry {\n  const inputData = items[0].json;\n  const scenes = findSceneEntries(inputData);\n\n  if (scenes.length === 0) {\n    throw new Error(\"No scene keys found at any level.\");\n  }\n\n  output = scenes.map(scene => ({ description: scene }));\n} catch (e) {\n  throw new Error(\"Could not extract scenes properly. Details: \" + e.message);\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        600
+      ],
+      "id": "b3566cb3-1018-41b1-b526-c725371adbdf",
+      "name": "Unbundle Prompts"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/mmaudio-v2 ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"prompt\": \"Mesmerizing cosmic soundscape. {{ $('Prompts AI Agent').item.json.output.Sound }}\",\n  \"duration\": 10,\n  \"video_url\": \"{{ $json.video.url }}\"\n}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        900
+      ],
+      "id": "2ea29352-a34c-4efd-bcb0-0d986df6f3c6",
+      "name": "Create Sounds",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.response_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2100,
+        960
+      ],
+      "id": "6cd9a2a7-7052-4047-976e-5f17747f7ed9",
+      "name": "Get Sounds",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 180
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1520,
+        900
+      ],
+      "id": "706bfd0c-2db8-4ed3-82e8-48722a9a20dd",
+      "name": "Wait for Sounds",
+      "webhookId": "e8f621a2-912d-43ad-ac67-0f135a441870"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    video_urls: items.map(item => item.json.video.url)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        1240
+      ],
+      "id": "359737be-3c82-4c86-8de7-8a2990cb11a5",
+      "name": "List Elements"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/ffmpeg-api/compose",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"tracks\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"video\",\n      \"keyframes\": [\n        { \"url\": \"{{ $json.video_urls[0] }}\", \"timestamp\": 0, \"duration\": 10 },\n        { \"url\": \"{{ $json.video_urls[1] }}\", \"timestamp\": 10, \"duration\": 10 },\n        { \"url\": \"{{ $json.video_urls[2] }}\", \"timestamp\": 20, \"duration\": 10 }\n      ]\n    }\n  ]\n}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        1240
+      ],
+      "id": "a68ba4f8-8980-4df3-9bf1-71a34c462dd2",
+      "name": "Sequence Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.response_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2280,
+        1240
+      ],
+      "id": "64da0fa0-091a-40f0-97c5-2255671f0022",
+      "name": "Get Final Video",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 180
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        1240
+      ],
+      "id": "d158f71e-c84d-4e13-bb8a-e599b7b6312b",
+      "name": "Wait for Final Video",
+      "webhookId": "4d45095b-ac57-450c-a05c-0fba53294131"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        240
+      ],
+      "id": "fed5d11d-cb8e-4ced-9fda-e4b275134b8c",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Give me an idea about\n\n[[\nA random cosmic situation describing a mesmerizing space phenomenon, written in this format: \"(Emotion or sensory reaction) the viewer witnesses a (cosmic object or event) in a (random celestial or surreal space location)\".\nExamples for your inspiration: Awestruck, the viewer witnesses a glowing nebula spiral in an endless starfield. Mesmerized, the viewer witnesses a twin planet eclipse in a frozen ring system. Breathless, the viewer witnesses a crystal comet shattering in a radiant supernova cloud.\n]]\n\nUse the Think tool to review your output.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=**Role**: You are an AI designed to generate 1 immersive, realistic idea based on a user-provided topic. Your output must be formatted as a JSON array (single line) and follow all the rules below exactly.\n\n***\nRULES:\n\nOnly return 1 idea at a time.\n\nThe user will provide a key topic (e.g. \"supernova\", \"planet formation\", \"galactic collision\").\n\nThe Idea must:\n\nBe under 13 words.\n\nDescribe a key moment, event, or visual phenomenon in outer space.\n\nMust feature a mesmerizing celestial object, event, or structure (e.g. glowing planet, radiant nebula, forming star, black hole dance).\n\nThe scene should evoke awe, wonder, and visual satisfaction.\n\nCan be set anywhere in the cosmos: galaxies, nebulae, exoplanets, black holes, star nurseries, etc.\n\nThe Caption must be:\n\nShort, punchy, and cosmic-focused.\n\nInclude one relevant emoji.\n\nInclude exactly 12 hashtags in this order:\n** 4 space-relevant hashtags\n** 4 all-time most popular hashtags\n** 4 currently trending hashtags (based on live research)\n\nAll hashtags must be lowercase.\n\nSet Status to \"for production\" (always).\n\nThe Environment must:\n\nBe under 20 words.\n\nMatch the visual or event in the Idea exactly.\n\nClearly describe:\nWhere the scene is happening (e.g. glowing nebula, icy exoplanet, supernova core)\n\nKey visuals or background details (e.g. swirling stardust, radiant rings, collapsing light waves)\n\nStyle of scene (e.g. cinematic wide shot, ethereal cosmic glow, close-up of planetary texture)\n\nThe Sound must:\n\nBe under 15 words.\n\nDescribe the primary ambient or cosmic sound that fits the scene.\n\nExample: deep space hum, soft stellar vibrations, faint galactic wind.\n\n\n***\nOUTPUT FORMAT (single-line JSON array):\n\n[\n  {\n    \"Caption\": \"Short viral title with emoji #4_topic_hashtags #4_all_time_popular_hashtags #4_trending_hashtags\",\n    \"Idea\": \"Short idea under 13 words\",\n    \"Environment\": \"Brief vivid setting under 20 words matching the action\",\n    \"Sound\": \"Primary sound description under 15 words\",\n    \"Status\": \"for production\"\n  }\n]"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1240,
+        380
+      ],
+      "id": "c02fe0e2-ccda-4668-afec-ca0495146b7a",
+      "name": "Ideas AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        240
+      ],
+      "id": "4dbf6add-009b-4d48-8562-06583d73fdc3",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "qIEOepwyh1Lq7JZq",
+          "name": "OpenAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Give me 3 video prompts based on the previous idea\n\nUse the Think tool to review your output",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Role: You are a prompt-generation AI specializing in immersive, mesmerizing space prompts. Your task is to generate a multi-scene cosmic sequence that vividly shows celestial objects, stellar formations, or galactic events unfolding in a richly detailed, awe-inspiring outer space setting.\n\nYour writing must follow this style:\n\nSharp, precise, immersive realism.\n\nScene-level detail with tight focus on the viewer’s perspective, cosmic motions, and the evolving celestial phenomena.\n\nCelestial objects and events must always be active — transforming, colliding, expanding, dissolving, or rotating. Never static or idle.\n\nNarrative and sensory terms are allowed (e.g. overwhelming scale, breathtaking motion, serene drift).\n\nEach scene must contain all of the following, expressed through detailed visual language:\n\n✅ The celestial object or cosmic event (from the Idea)\n\n✅ The story environment or setting (from the Environment)\n\n✅ A clear visual transformation, celestial phenomenon, or cosmic interaction\n\n✅ The viewer’s visible or implied sensory reaction (awe, insignificance, calm, disorientation, etc.)\n\nDescriptions should show:\n\nThe viewer’s sensory and emotional response — are they breathless, captivated, dwarfed, soothed, unsettled?\n\nHow the space environment influences the cosmic display — does it amplify the beauty, distort perception, or create tension?\n\nThe interaction between celestial bodies, space phenomena, and cosmic elements — using vivid visual cues, symbolic details, and sensory immersion (always shown, never merely stated).\n\nAny cosmic-relevant cues like gravitational pull, light distortion, stellar drift, time dilation, or explosive transformation — always grounded in visual and sensory realism.\n\nTone:\n\nGrounded, cinematic, visually descriptive.\n\nNo forced narrative, no oversimplified spectacle.\n\nAvoid space clichés or illogical science — surreal settings are allowed, but the visual sequence must feel physically plausible and emotionally resonant.\n\nAll descriptions must feel physically present, scientifically immersive, and emotionally impactful.\n\nLength:\n\nEach scene must be between 1,000 and 2,000 characters.\n\nNo shallow or repetitive scenes — each must be immersive, descriptive, and specific.\n\nEach scene should explore a distinct phase of the cosmic event, a changing perspective, or a new visual transformation.\n\nInputs:\n\nIdea: \"{{ $json.idea }}\"\nEnvironment: \"{{ $json.environment_prompt }}\"\nSound: \"{{ $json.sound_prompt }}\"\n\nFormat:\n\nIdea: \"...\"\nEnvironment: \"...\"\nSound: \"...\"\n\nScene 1: \"...\"\nScene 2: \"...\"\nScene 3: \"...\"\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1640,
+        380
+      ],
+      "id": "d7b204df-5e7b-4c2e-82e3-840e2de5b092",
+      "name": "Prompts AI Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"Caption\": \"Short cosmic-focused title with emoji #4_space_hashtags #4_all_time_popular_hashtags #4_trending_hashtags\",\n    \"Idea\": \"Short idea under 13 words featuring a celestial or space event/object\",\n    \"Environment\": \"Brief vivid space setting under 20 words matching the cosmic scene\",\n    \"Sound\": \"Primary sound description under 15 words, fitting a celestial or vast space scene\",\n    \"Status\": \"for production\"\n  }\n]"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        220
+      ],
+      "id": "c5b9ce8d-e956-485f-8039-fe786fd0ae43",
+      "name": "Parser"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                3
+              ],
+              "triggerAtHour": 9
+            },
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                6
+              ],
+              "triggerAtHour": 21
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        380
+      ],
+      "id": "d6dbd5d4-7ce2-49b8-9527-63bc0c41e25e",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8",
+          "mode": "list",
+          "cachedResultName": "[Seedance] Content Generation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "idea": "={{ $('Log the Idea').first().json.idea }}",
+            "final_output": "={{ $json.video_url }}",
+            "production": "done"
+          },
+          "matchingColumns": [
+            "idea"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "environment_prompt",
+              "displayName": "environment_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sound_prompt",
+              "displayName": "sound_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1540,
+        1540
+      ],
+      "id": "e398a5ec-468c-4931-b2d6-ee4987f3504a",
+      "name": "Log Final Video",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ySx0VxGPEtAVZH2F",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# 🍳 Seedance in n8n \n\n**Author:** Jay E from [robonuggets.com](https://robonuggets.com)\n\n**Refactored by:** Dimas Saputra [dimas-saputra-me](https://www.linkedin.com/in/dimas-saputra-me/)",
+        "height": 280,
+        "width": 420,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        60,
+        380
+      ],
+      "id": "1606722b-8f5a-4408-81fd-89a60b6f4056",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Idea\": \"A crystal comet shattering near a glowing gas giant\",\n  \"Environment\": \"Vast cosmic space, swirling gas clouds, distant star illumination\",\n  \"Sound\": \"Deep space hum, subtle crystal cracking, echoing cosmic reverberations\",\n  \"Scene 1\": \"Wide cosmic shot: a radiant crystal comet glides past a colossal gas giant, its icy facets sparkling under the soft glow of a distant star.\",\n  \"Scene 2\": \"Close-up: fractures rapidly form across the comet's translucent body, releasing glimmering shards that spin and scatter in zero gravity, each shard catching starlight in delicate hues.\",\n  \"Scene 3\": \"Cinematic wide shot: the comet bursts into a slow, radiant explosion, sending a spiral of crystal fragments through the swirling gas clouds, while faint gravitational ripples distort the shimmering space around it.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1360,
+        220
+      ],
+      "id": "1c67685a-9942-40bd-a732-3f79be7891b5",
+      "name": "Parser2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/bytedance/seedance/v1/pro/text-to-video",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"aspect_ratio\": \"9:16\",\n  \"duration\": 10,\n  \"resolution\": \"480p\",\n  \"prompt\": \"VIDEO THEME: {{ $('Prompts AI Agent').item.json.output.Idea }} | WHAT HAPPENS IN THE VIDEO: {{ $json.description }} | WHERE THE VIDEO IS SHOT: {{ $('Prompts AI Agent').item.json.output.Environment }}\"\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        600
+      ],
+      "id": "e14d6781-f1a1-4fbb-b408-64f0e19267dd",
+      "name": "Create Clips",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 180
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1520,
+        600
+      ],
+      "id": "611aea76-a471-4061-a4a3-626e441e2790",
+      "name": "Wait for Clips",
+      "webhookId": "3ef8e370-50cf-489e-8775-bf502ce60a26"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8",
+          "mode": "list",
+          "cachedResultName": "[Seedance] Content Generation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1d7lv3MyTihnACE9OyaSGop7jNDbgQo6_Ra75buikrMM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "==ROW()-1",
+            "idea": "={{ $json.output[0].Idea }}",
+            "caption": "={{ $json.output[0].Caption }}",
+            "production": "={{ $json.output[0].Status }}",
+            "environment_prompt": "={{ $json.output[0].Environment }}",
+            "sound_prompt": "={{ $json.output[0].Sound }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "environment_prompt",
+              "displayName": "environment_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sound_prompt",
+              "displayName": "sound_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1520,
+        380
+      ],
+      "id": "d6106ff2-b9de-4ef3-8259-e0f9218f0327",
+      "name": "Log the Idea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ySx0VxGPEtAVZH2F",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## | Step 1: Generate Clips",
+        "height": 100,
+        "width": 500,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        680,
+        600
+      ],
+      "id": "f117abdd-fc55-4775-9bd4-fdba9c5c914a",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## | Step 2: Generate Sounds\n",
+        "height": 100,
+        "width": 560,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        900
+      ],
+      "id": "47f23da0-2d52-42e4-96a4-b05d11d3a401",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## INPUT: Starting Idea",
+        "height": 100,
+        "width": 500,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        580,
+        380
+      ],
+      "id": "ebf63bbf-ecc5-4fbb-ac8c-77b1f3119161",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "## OUTPUT: Final Video",
+        "height": 100,
+        "width": 500,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        980,
+        1540
+      ],
+      "id": "635d8627-0e50-44cd-af20-a237409e48d7",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## | Step 3: Stitch Video",
+        "height": 100,
+        "width": 360,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        1240
+      ],
+      "id": "a6370fa8-3782-4393-be81-b8f5ed89f62c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "574177a1-22ed-42eb-a7a3-2073ce5fcf49",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1860,
+        660
+      ],
+      "id": "e42cc2eb-b637-459c-9ce1-54aefcd4003d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.status_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1720,
+        600
+      ],
+      "id": "088d4e02-3491-4a8b-a04b-0624b4c6939c",
+      "name": "Get Clips Status",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Get Clips Status').item.json.response_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2100,
+        640
+      ],
+      "id": "c986de3f-45ee-46c3-95f4-fd0622450aa2",
+      "name": "Get Clips",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "e8e6e5p3Ggo0qSkO",
+          "mode": "list",
+          "cachedResultName": "Publishing Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1720,
+        1540
+      ],
+      "id": "aa9b6e86-25f9-4f77-90de-4bcd988c0e08",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "17261dbf-09ad-45cf-94d0-b577addacdb7",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1880,
+        980
+      ],
+      "id": "bc2148b8-b6ce-4914-90fe-5e78e8c2c958",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.status_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1720,
+        900
+      ],
+      "id": "dd192a1e-284d-4f6d-90d6-19a4543e5c0c",
+      "name": "Get Sounds Status",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.status_url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1740,
+        1240
+      ],
+      "id": "3f1c1f3d-1e4b-4dd8-80b5-1820603de249",
+      "name": "Get Sequences Video Status",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "zMDhxmNDCmeE62Q9",
+          "name": "Fal.ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eb761041-0696-4bbc-bdac-d40faadf266a",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1880,
+        1260
+      ],
+      "id": "15189a67-5468-4434-b2f9-46e8267cc25d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2100,
+        1240
+      ],
+      "id": "9aff72de-f7f1-4621-9bd1-f19fd6685992",
+      "name": "Wait",
+      "webhookId": "819b5da4-f0fc-4852-9561-2c4556191d07"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Unbundle Prompts": {
+      "main": [
+        [
+          {
+            "node": "Create Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Sounds": {
+      "main": [
+        [
+          {
+            "node": "Wait for Sounds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Sounds": {
+      "main": [
+        [
+          {
+            "node": "Get Sounds Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Elements": {
+      "main": [
+        [
+          {
+            "node": "Sequence Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sequence Video": {
+      "main": [
+        [
+          {
+            "node": "Wait for Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Final Video": {
+      "main": [
+        [
+          {
+            "node": "Get Sequences Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Ideas AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Prompts AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ideas AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Log the Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ideas AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Prompts AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Ideas AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Ideas AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompts AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Unbundle Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sounds": {
+      "main": [
+        [
+          {
+            "node": "List Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Final Video": {
+      "main": [
+        [
+          {
+            "node": "Log Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Prompts AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Clips": {
+      "main": [
+        [
+          {
+            "node": "Wait for Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Clips": {
+      "main": [
+        [
+          {
+            "node": "Get Clips Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log the Idea": {
+      "main": [
+        [
+          {
+            "node": "Prompts AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get Clips",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Clips Status": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Clips": {
+      "main": [
+        [
+          {
+            "node": "Create Sounds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Final Video": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sounds Status": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Get Sounds",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Sounds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sequences Video Status": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait for Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0ba28ed1-216e-492a-a25c-f144d96f578e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d2939436cf749b788c1adf42b34d9c806ef10b7223b8be74a2c22db80649bf4"
+  },
+  "id": "JHXUAAolCkbTLF6V",
+  "tags": []
+}

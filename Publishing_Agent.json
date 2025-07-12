@@ -1,0 +1,1238 @@
+{
+  "name": "Publishing Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c087ebbf-22a5-45f4-82d5-ddabfd921889",
+              "leftValue": "={{ $json.youtube_status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "301baec8-c772-4042-bdc1-7d2d99f07043",
+              "leftValue": "={{ $json.facebook_status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "c7469347-06e8-4163-a280-d85ed47d167b",
+              "leftValue": "={{ $json.instagram_status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4180,
+        1200
+      ],
+      "id": "dd536d85-2bd9-4294-9d68-ae2fe1c80635",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $json.idea }} #shorts",
+        "regionCode": "ID",
+        "categoryId": "24",
+        "options": {
+          "description": "={{ $json.caption }} #shorts"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        740
+      ],
+      "id": "f6ec24dd-d5d8-479d-9905-405590d806dd",
+      "name": "Youtube Post",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "zdx8T8VD0BbLjKof",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Youtube Agent\n",
+        "height": 400,
+        "width": 900,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        600
+      ],
+      "id": "56b263db-72f8-4cc2-88c1-b1156b3aca34",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Instagram Agent",
+        "height": 460,
+        "width": 1460,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        1520
+      ],
+      "id": "080f400f-d414-4644-af8c-6ae667898915",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Facebook Agent",
+        "height": 360,
+        "width": 1040,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        1080
+      ],
+      "id": "e20412e2-aa71-4070-ba77-d94dcc58d83a",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## TikTok Agent (Unused)",
+        "height": 220,
+        "width": 420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        520,
+        1420
+      ],
+      "id": "6a614cf6-007c-4ba1-89f0-31108165edc5",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        3960,
+        1200
+      ],
+      "id": "75cb5000-f341-40a4-89f4-aee721d66e8f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8",
+          "mode": "list",
+          "cachedResultName": "[Seedance] Content Generation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "production",
+              "lookupValue": "done"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        720,
+        900
+      ],
+      "id": "6156f31e-a457-452c-9b3c-3114c5b75abb",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ySx0VxGPEtAVZH2F",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.instagram.com/v23.0/YOUR_IG_ID/media_publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        1660
+      ],
+      "id": "e06cf224-79d6-4cad-ac28-26f5c6352f52",
+      "name": "Upload Reel to IG",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "K7IFFXj4MFeh8OYb",
+          "name": "Instagram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.instagram.com/v23.0/YOUR_IG_ID/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "media_type",
+              "value": "REELS"
+            },
+            {
+              "name": "video_url",
+              "value": "={{ $json.final_output }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.idea }}\n\n{{ $json.caption }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1480,
+        1680
+      ],
+      "id": "d0492d3d-8d6f-4477-b953-d3a6f4447600",
+      "name": "Create Container",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "nsPGjTb5aDVJbPeb",
+          "name": "Instagram API"
+        },
+        "httpQueryAuth": {
+          "id": "K7IFFXj4MFeh8OYb",
+          "name": "Instagram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 45
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2000,
+        1740
+      ],
+      "id": "5291e80d-6962-41cf-aae5-9e7d3ca08ff2",
+      "name": "Wait",
+      "webhookId": "f888466a-3b8e-4c19-95cc-25959cba66a7"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        900
+      ],
+      "id": "bdd9d57f-1366-46a0-9e2d-7d6f8ff2e738",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoId": "={{ $json.uploadId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        740
+      ],
+      "id": "d3fa1a64-4984-40da-8e95-d39194f140e0",
+      "name": "YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "zdx8T8VD0BbLjKof",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "semastercreator@gmail.com",
+        "subject": "New Video has been Published!",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>YouTube Video Upload Notification</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 20px;\">\n  <table style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\">\n    <tr>\n      <td style=\"text-align: center; padding-bottom: 20px;\">\n        <h2 style=\"color: #2c3e50;\">New Video Uploaded: {{ $('Google Sheets').item.json.idea }}</h2>\n        <img src=\"{{ $('YouTube').item.json.snippet.thumbnails.default.url }}\" alt=\"{{ $('Google Sheets').item.json.idea }}\" style=\"max-width: 100%; border-radius: 8px;\">\n      </td>\n    </tr>\n    <tr>\n      <td>\n        <p><strong>Video Title:</strong> {{ $('Google Sheets').item.json.idea }} </p>\n        <p><strong>Published At:</strong> https://semastercreator.vercel.app/ </p>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        4620,
+        1140
+      ],
+      "id": "01a86d4f-c63d-44f7-a628-dd64a52ee500",
+      "name": "Success Alert",
+      "webhookId": "1be42e68-5bea-4b8a-8372-20eb32f8629b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ePhEiLGySPYc9LWU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "semastercreator@gmail.com",
+        "subject": "Error Happend While Trying To Publish New Video!",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>YouTube Video Upload Notification</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 20px;\">\n  <table style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\">\n    <tr>\n      <td style=\"text-align: center; padding-bottom: 20px;\">\n        <h2 style=\"color: #2c3e50;\">An Error Has Occured, Please Check N8N Workflow History</h2>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        4380,
+        1320
+      ],
+      "id": "a5271dde-8e3e-4d62-94bb-c68adfb7e8c0",
+      "name": "Error Alert",
+      "webhookId": "707be75b-13ed-40f2-92bb-473f4d31797e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ePhEiLGySPYc9LWU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8",
+          "mode": "list",
+          "cachedResultName": "[Seedance] Content Generation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tZAhLjltIBlwOlHuNAFd9kGtkzBpFuNapYL-k8ypEx8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Google Sheets').item.json.id }}",
+            "production": "published"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "environment_prompt",
+              "displayName": "environment_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sound_prompt",
+              "displayName": "sound_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        4380,
+        1140
+      ],
+      "id": "5133db42-bdd0-422b-8380-39390ee85730",
+      "name": "Update Production Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ySx0VxGPEtAVZH2F",
+          "name": "SeMasterCreator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v22.0",
+        "node": "=YOUR_FB_ID/videos",
+        "sendBinaryData": true,
+        "binaryPropertyName": "data",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "title",
+                "value": "={{ $json.idea }}"
+              },
+              {
+                "name": "description",
+                "value": "={{ $json.idea }}\n\n{{ $json.caption }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        1200
+      ],
+      "id": "d430495a-cac7-4c14-a3d5-b8df0ba42a62",
+      "name": "Upload Video",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "9XxeyltrBVc8L4nz",
+          "name": "Facebook API Account (Extend 18 August)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.final_output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        840
+      ],
+      "id": "a9bdc332-4625-4618-a20d-65e88a719d0e",
+      "name": "Get Video"
+    },
+    {
+      "parameters": {
+        "graphApiVersion": "v22.0",
+        "node": "={{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        1200
+      ],
+      "id": "be0d105d-3fbc-42b7-8213-86b5bcb11817",
+      "name": "Get Video Status",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "9XxeyltrBVc8L4nz",
+          "name": "Facebook API Account (Extend 18 August)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.instagram.com/v23.0/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        1680
+      ],
+      "id": "2b915418-e1cb-436a-b600-c2e11585452e",
+      "name": "Check Status",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "K7IFFXj4MFeh8OYb",
+          "name": "Instagram API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $json.idea }}"
+            },
+            {
+              "name": "user",
+              "value": "SeMasterCreator"
+            },
+            {
+              "name": "platform[]",
+              "value": "tiktok"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "description",
+              "value": "={{ $json.caption }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        580,
+        1480
+      ],
+      "id": "84a2a188-334f-428b-bd66-bfaa036fd204",
+      "name": "TikTok Post",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dZQXg3aifisGAFvW",
+          "name": "upload-post.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4cbe0e35-16bc-4f8f-ac16-01e0ebc5772c",
+              "leftValue": "={{ $json.status.uploadStatus }}",
+              "rightValue": "uploaded",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        740
+      ],
+      "id": "096852a9-7f05-49dc-9457-ea71dc134989",
+      "name": "Youtube Status Check"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e2401d91-b660-4ba9-b596-c71f8e6d3122",
+              "leftValue": "={{ $json.status_code }}",
+              "rightValue": "FINISHED",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1820,
+        1680
+      ],
+      "id": "27246b26-6347-44ad-afe8-a9494f7a2439",
+      "name": "Upload Status Check Loop"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4cbe0e35-16bc-4f8f-ac16-01e0ebc5772c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "uploaded",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2360,
+        1660
+      ],
+      "id": "e4f84137-2b3d-44f0-9af7-885c9ca9b6c5",
+      "name": "Instagram Status Check"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65ef4364-1bb9-414a-af59-d7cddc270d07",
+              "name": "youtube_status",
+              "value": "success",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        660
+      ],
+      "id": "237addf9-4bdf-486a-a7ba-95196da5f396",
+      "name": "True (YT)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03b03225-bba9-4ecd-9f8c-16844a6f3bb1",
+              "name": "youtube_status",
+              "value": "failed",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        800
+      ],
+      "id": "6e88584b-e094-4bd3-84dd-1a0d546955c8",
+      "name": "False (YT)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65ef4364-1bb9-414a-af59-d7cddc270d07",
+              "name": "instagram_status",
+              "value": "success",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2600,
+        1580
+      ],
+      "id": "98088e9b-cd1f-48ac-a389-c61d32cad10d",
+      "name": "True (IG)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03b03225-bba9-4ecd-9f8c-16844a6f3bb1",
+              "name": "instagram_status",
+              "value": "failed",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2600,
+        1720
+      ],
+      "id": "bef4f5f7-5506-4a8c-a000-8a5061484157",
+      "name": "False (IG)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4cbe0e35-16bc-4f8f-ac16-01e0ebc5772c",
+              "leftValue": "={{ $json.updated_time }}",
+              "rightValue": "uploaded",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1980,
+        1200
+      ],
+      "id": "c3ba37fe-445b-42b7-868c-9dcd2eb73479",
+      "name": "Facebook Status Check"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65ef4364-1bb9-414a-af59-d7cddc270d07",
+              "name": "facebook_status",
+              "value": "success",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2220,
+        1120
+      ],
+      "id": "ca360ce8-8b03-4dd7-87a5-e7ef5b3b95d5",
+      "name": "True (FB)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "03b03225-bba9-4ecd-9f8c-16844a6f3bb1",
+              "name": "facebook_status",
+              "value": "failed",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2220,
+        1260
+      ],
+      "id": "57e7d955-3d7c-49fc-92cb-b3544286a048",
+      "name": "False (FB)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update Production Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Youtube Post": {
+      "main": [
+        [
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Get Video",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Container",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Container": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Reel to IG": {
+      "main": [
+        [
+          {
+            "node": "Instagram Status Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube": {
+      "main": [
+        [
+          {
+            "node": "Youtube Status Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Production Status": {
+      "main": [
+        [
+          {
+            "node": "Success Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video": {
+      "main": [
+        [
+          {
+            "node": "Get Video Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video": {
+      "main": [
+        [
+          {
+            "node": "Youtube Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Video Status": {
+      "main": [
+        [
+          {
+            "node": "Facebook Status Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Upload Status Check Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TikTok Post": {
+      "main": [
+        []
+      ]
+    },
+    "Youtube Status Check": {
+      "main": [
+        [
+          {
+            "node": "True (YT)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "False (YT)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Status Check Loop": {
+      "main": [
+        [
+          {
+            "node": "Upload Reel to IG",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram Status Check": {
+      "main": [
+        [
+          {
+            "node": "True (IG)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "False (IG)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True (YT)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "False (YT)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True (IG)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "False (IG)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Facebook Status Check": {
+      "main": [
+        [
+          {
+            "node": "True (FB)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "False (FB)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "True (FB)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "False (FB)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bfc992fe-7abc-4a64-a0df-3ed249b54e18",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2d2939436cf749b788c1adf42b34d9c806ef10b7223b8be74a2c22db80649bf4"
+  },
+  "id": "e8e6e5p3Ggo0qSkO",
+  "tags": []
+}
