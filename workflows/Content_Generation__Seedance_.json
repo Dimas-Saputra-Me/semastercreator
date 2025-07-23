@@ -259,16 +259,11 @@
             {
               "field": "weeks",
               "triggerAtDay": [
-                3
-              ],
-              "triggerAtHour": 9
-            },
-            {
-              "field": "weeks",
-              "triggerAtDay": [
+                3,
                 6
               ],
-              "triggerAtHour": 21
+              "triggerAtHour": 20,
+              "triggerAtMinute": 30
             }
           ]
         }
@@ -406,22 +401,6 @@
           "name": "SeMasterCreator"
         }
       }
-    },
-    {
-      "parameters": {
-        "content": "# 🍳 Seedance in n8n \n\n**Author:** Jay E from [robonuggets.com](https://robonuggets.com)\n\n**Refactored by:** Dimas Saputra [dimas-saputra-me](https://www.linkedin.com/in/dimas-saputra-me/)",
-        "height": 280,
-        "width": 420,
-        "color": 7
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        60,
-        380
-      ],
-      "id": "1606722b-8f5a-4408-81fd-89a60b6f4056",
-      "name": "Sticky Note12"
     },
     {
       "parameters": {
@@ -924,6 +903,22 @@
       "id": "9aff72de-f7f1-4621-9bd1-f19fd6685992",
       "name": "Wait",
       "webhookId": "819b5da4-f0fc-4852-9561-2c4556191d07"
+    },
+    {
+      "parameters": {
+        "content": "# 🍳 Seedance in n8n \n# (by RoboNuggets)\n## How to Set Up for Your Own Space  \n\n**Author:** Jay E from [robonuggets.com](https://robonuggets.com)\n\n**Refactored by:** Dimas Saputra [dimas-saputra-me](https://www.linkedin.com/in/dimas-saputra-me/)\n\nThis guide shows you how to set up this workflow for your own space. Hope you find this of value!\n\n---\n\n## 🔳 Part 1: Set Up OpenAI for Ideation\n1. Go to [OpenAI API Platform](https://platform.openai.com/api-keys)  \n2. Create an account (if you don’t have one).  \n3. Generate an API key.  \n4. Create a credential using that key via the **OpenAI Chat Model** node.\n\n---\n\n## 🔳 Part 2: Set Up the Google Sheet Logger  \n1. Make a copy of the [Google Sheet template](https://docs.google.com/spreadsheets/d/1dCTaSYpjDe7NHmfM3QbhpV4tysqccnHr9Pss7ttFyek/edit?usp=sharing) provided.  \n2. Use it to log ideas and results generated in your workflow.  \n3. Connect the sheet in n8n using the **Google Sheets node** and create a credential if needed.\n\n---\n\n## 🔳 Part 3: Configure Wavespeed and Fal AI \n1. Go to [Fal AI](https://fal.ai) and [Wavespeed AI](https://wavespeed.ai/center/default/invites/O78a5e0f70b844361bf16b7e7d824a831JCvxSemkjSeCfFLT) and sign in.  \n2. Generate your API key in the Settings\n3. In n8n, create new HTTP credentials with **Header Auth** using your keys  \n4. Use this credential in the relevant HTTP Request nodes.\n\n---\n\n## 🔳 Part 4: Customize the System Prompts  \n1. Choose the niche or theme for your content\n2. Edit the user and system prompt in the \"Ideas AI Agent\"\n3. You can also edit the \"Prompts AI Agent\" to match what you need",
+        "height": 1400,
+        "width": 420,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        60,
+        380
+      ],
+      "id": "23d18325-46cd-4f94-a95e-11f94abcee79",
+      "name": "Sticky Note15"
     }
   ],
   "pinData": {},
@@ -1259,9 +1254,11 @@
   },
   "active": true,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "Asia/Jakarta",
+    "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "0ba28ed1-216e-492a-a25c-f144d96f578e",
+  "versionId": "ae90c063-f6d6-4b00-bddf-cc3937d3ee59",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "2d2939436cf749b788c1adf42b34d9c806ef10b7223b8be74a2c22db80649bf4"

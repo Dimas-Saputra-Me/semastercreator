@@ -60,7 +60,7 @@
         "resource": "video",
         "operation": "upload",
         "title": "={{ $json.idea }} #shorts",
-        "regionCode": "ID",
+        "regionCode": "AU",
         "categoryId": "24",
         "options": {
           "description": "={{ $json.caption }} #shorts"
@@ -128,21 +128,6 @@
       ],
       "id": "e20412e2-aa71-4070-ba77-d94dcc58d83a",
       "name": "Sticky Note8"
-    },
-    {
-      "parameters": {
-        "content": "## TikTok Agent (Unused)",
-        "height": 220,
-        "width": 420
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        520,
-        1420
-      ],
-      "id": "6a614cf6-007c-4ba1-89f0-31108165edc5",
-      "name": "Sticky Note9"
     },
     {
       "parameters": {
@@ -330,7 +315,7 @@
     },
     {
       "parameters": {
-        "sendTo": "semastercreator@gmail.com",
+        "sendTo": "YOUR_EMAIL",
         "subject": "New Video has been Published!",
         "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>YouTube Video Upload Notification</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 20px;\">\n  <table style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\">\n    <tr>\n      <td style=\"text-align: center; padding-bottom: 20px;\">\n        <h2 style=\"color: #2c3e50;\">New Video Uploaded: {{ $('Google Sheets').item.json.idea }}</h2>\n        <img src=\"{{ $('YouTube').item.json.snippet.thumbnails.default.url }}\" alt=\"{{ $('Google Sheets').item.json.idea }}\" style=\"max-width: 100%; border-radius: 8px;\">\n      </td>\n    </tr>\n    <tr>\n      <td>\n        <p><strong>Video Title:</strong> {{ $('Google Sheets').item.json.idea }} </p>\n        <p><strong>Published At:</strong> https://semastercreator.vercel.app/ </p>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n",
         "options": {}
@@ -353,7 +338,7 @@
     },
     {
       "parameters": {
-        "sendTo": "semastercreator@gmail.com",
+        "sendTo": "YOUR_EMAIL",
         "subject": "Error Happend While Trying To Publish New Video!",
         "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>YouTube Video Upload Notification</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 20px;\">\n  <table style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\">\n    <tr>\n      <td style=\"text-align: center; padding-bottom: 20px;\">\n        <h2 style=\"color: #2c3e50;\">An Error Has Occured, Please Check N8N Workflow History</h2>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n",
         "options": {}
@@ -577,58 +562,6 @@
         "httpQueryAuth": {
           "id": "K7IFFXj4MFeh8OYb",
           "name": "Instagram API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.upload-post.com/api/upload",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "title",
-              "value": "={{ $json.idea }}"
-            },
-            {
-              "name": "user",
-              "value": "SeMasterCreator"
-            },
-            {
-              "name": "platform[]",
-              "value": "tiktok"
-            },
-            {
-              "parameterType": "formBinaryData",
-              "name": "video",
-              "inputDataFieldName": "data"
-            },
-            {
-              "name": "description",
-              "value": "={{ $json.caption }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        580,
-        1480
-      ],
-      "id": "84a2a188-334f-428b-bd66-bfaa036fd204",
-      "name": "TikTok Post",
-      "retryOnFail": true,
-      "waitBetweenTries": 5000,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "dZQXg3aifisGAFvW",
-          "name": "upload-post.com"
         }
       }
     },
@@ -905,6 +838,22 @@
       ],
       "id": "57e7d955-3d7c-49fc-92cb-b3544286a048",
       "name": "False (FB)"
+    },
+    {
+      "parameters": {
+        "content": "## 🚀 Ultimate Reels Publishing Agent 2.0\n**Get Millions of Views Across All Platforms — And Turn Them Into Income!**\n\n- Hybrid Content Publishing System\n- 🎯 One-click scheduling across **Instagram Reels**, **YouTube Shorts**, **Facebook Reels** and **TikTOk**\n- 💬 Auto-generate **viral captions**, **engaging descriptions**, and **platform-optimized hashtags**  \n- 💸 No need for costly APIs — **100% budget-friendly**  \n- 🧠 Smart content engine tailored for **maximum reach & engagement**\n\n**Grow faster. Post smarter. Earn more.**\n\n## Credits\n**Build by Dainami AI** :https://www.youtube.com/@dainami_ai/\n\n**Refactored by:** Dimas Saputra [dimas-saputra-me](https://www.linkedin.com/in/dimas-saputra-me/)",
+        "height": 460,
+        "width": 480,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        600
+      ],
+      "id": "289bda5b-6842-44a1-aa93-4e679d71a1c9",
+      "name": "Sticky Note7"
     }
   ],
   "pinData": {},
@@ -953,12 +902,12 @@
       "main": [
         [
           {
-            "node": "Get Video",
+            "node": "Create Container",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Create Container",
+            "node": "Get Video",
             "type": "main",
             "index": 0
           }
@@ -1078,11 +1027,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "TikTok Post": {
-      "main": [
-        []
       ]
     },
     "Youtube Status Check": {
@@ -1228,7 +1172,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "bfc992fe-7abc-4a64-a0df-3ed249b54e18",
+  "versionId": "c6556af2-78fd-41d0-833d-e73165810ba2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "2d2939436cf749b788c1adf42b34d9c806ef10b7223b8be74a2c22db80649bf4"
